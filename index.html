@@ -17,15 +17,16 @@
             margin: 0 auto;
             padding: 20px;
             max-width: 800px;
-            background-color: white;
+            background-color: #222;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             overflow: hidden;
+            color: white;
         }
 
         h1 {
             font-size: 2.5em;
-            color: #333;
+            color: #FFD700;
         }
 
         .scoreboard {
@@ -35,7 +36,7 @@
         }
 
         .player {
-            background-color: #f2f2f2;
+            background-color: #333;
             padding: 10px;
             border-radius: 5px;
             width: 45%;
@@ -43,7 +44,7 @@
 
         .court {
             position: relative;
-            height: 400px;
+            height: 500px;
             background-image: url('https://upload.wikimedia.org/wikipedia/commons/2/2a/Basketball_Court_Transparant.png');
             background-size: cover;
             background-position: center;
@@ -85,20 +86,20 @@
             font-size: 1em;
             border: none;
             border-radius: 5px;
-            background-color: #333;
-            color: white;
+            background-color: #FFD700;
+            color: black;
             cursor: pointer;
             transition: background-color 0.3s;
         }
 
         button:hover {
-            background-color: #555;
+            background-color: #FFA500;
         }
 
         #result {
             margin-top: 20px;
             font-size: 1.2em;
-            color: #333;
+            color: #FFD700;
         }
     </style>
 </head>
@@ -152,6 +153,8 @@
             if (shotsTaken < maxShots) {
                 let success = Math.random() > 0.5; // 50% chance to score
                 let shotResult = success ? "scores!" : "misses!";
+                
+                basketball.style.left = currentPlayer === 1 ? '20%' : '80%';
                 
                 if (success) {
                     basketball.style.bottom = "80%";
