@@ -9,15 +9,18 @@
             font-family: Arial, sans-serif;
             background-color: #87CEEB;
             text-align: center;
+            margin: 0;
+            padding: 0;
         }
 
         .container {
             margin: 0 auto;
             padding: 20px;
-            max-width: 600px;
+            max-width: 800px;
             background-color: white;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
 
         h1 {
@@ -40,8 +43,10 @@
 
         .court {
             position: relative;
-            height: 200px;
-            background-color: #FFD700;
+            height: 400px;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/2/2a/Basketball_Court_Transparant.png');
+            background-size: cover;
+            background-position: center;
             margin: 20px 0;
             border-radius: 10px;
             overflow: hidden;
@@ -49,11 +54,30 @@
 
         #basketball {
             position: absolute;
-            top: 50%;
+            bottom: 10%;
             left: 50%;
             width: 50px;
-            transform: translate(-50%, -50%);
-            transition: top 0.5s, left 0.5s;
+            transform: translateX(-50%);
+            transition: bottom 0.5s, left 0.5s;
+        }
+
+        .character {
+            position: absolute;
+            bottom: 10%;
+            width: 100px;
+            transition: transform 0.5s;
+        }
+
+        #player1-character {
+            left: 20%;
+        }
+
+        #player2-character {
+            right: 20%;
+        }
+
+        .highlight {
+            transform: scale(1.2);
         }
 
         button {
@@ -92,6 +116,8 @@
             </div>
         </div>
         <div class="court">
+            <img id="player1-character" class="character" src="https://upload.wikimedia.org/wikipedia/commons/3/33/Michael_Jordan_in_2014.jpg" alt="Player 1">
+            <img id="player2-character" class="character" src="https://upload.wikimedia.org/wikipedia/commons/8/8b/LeBron_James_Lakers.jpg" alt="Player 2">
             <img id="basketball" src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Basketball.png" alt="Basketball">
         </div>
         <button id="shootButton">Shoot</button>
@@ -104,32 +130,59 @@
         const maxShots = 10;
         let shotsTaken = 0;
 
-        document.getElementById('shootButton').addEventListener('click', () => {
+        const shootButton = document.getElementById('shootButton');
+        const result = document.getElementById('result');
+        const basketball = document.getElementById('basketball');
+        const player1Character = document.getElementById('player1-character');
+        const player2Character = document.getElementById('player2-character');
+
+        function highlightCurrentPlayer() {
+            if (currentPlayer === 1) {
+                player1Character.classList.add('highlight');
+                player2Character.classList.remove('highlight');
+            } else {
+                player1Character.classList.remove('highlight');
+                player2Character.classList.add('highlight');
+            }
+        }
+
+        highlightCurrentPlayer();
+
+        shootButton.addEventListener('click', () => {
             if (shotsTaken < maxShots) {
                 let success = Math.random() > 0.5; // 50% chance to score
-                let result = document.getElementById('result');
+                let shotResult = success ? "scores!" : "misses!";
+                
                 if (success) {
-                    if (currentPlayer === 1) {
-                        player1Score++;
-                        document.getElementById('score1').textContent = player1Score;
-                        result.textContent = "Player 1 scores!";
-                    } else {
-                        player2Score++;
-                        document.getElementById('score2').textContent = player2Score;
-                        result.textContent = "Player 2 scores!";
-                    }
+                    basketball.style.bottom = "80%";
                 } else {
-                    result.textContent = `Player ${currentPlayer} misses!`;
+                    basketball.style.bottom = "60%";
                 }
+
+                setTimeout(() => {
+                    basketball.style.bottom = "10%";
+                    basketball.style.left = "50%";
+                }, 500);
+                
+                if (currentPlayer === 1) {
+                    if (success) player1Score++;
+                    document.getElementById('score1').textContent = player1Score;
+                    result.textContent = "Player 1 " + shotResult;
+                } else {
+                    if (success) player2Score++;
+                    document.getElementById('score2').textContent = player2Score;
+                    result.textContent = "Player 2 " + shotResult;
+                }
+                
                 currentPlayer = currentPlayer === 1 ? 2 : 1;
                 shotsTaken++;
+                highlightCurrentPlayer();
             } else {
                 determineWinner();
             }
         });
 
         function determineWinner() {
-            let result = document.getElementById('result');
             if (player1Score > player2Score) {
                 result.textContent = "Player 1 wins!";
             } else if (player2Score > player1Score) {
@@ -137,7 +190,7 @@
             } else {
                 result.textContent = "It's a tie!";
             }
-            document.getElementById('shootButton').disabled = true;
+            shootButton.disabled = true;
         }
     </script>
 </body>
